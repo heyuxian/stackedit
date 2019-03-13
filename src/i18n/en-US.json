@@ -1,0 +1,45 @@
+{
+  "message": {
+    "common": {
+      "ok": "OK",
+      "cancel": "CANCEL",
+      "trash": "Trash",
+      "temp": "Temp"
+    },
+    "link_modal": {
+      "label": "Please provide a <b>URL</b> for your link."
+    },
+    "image_modal": {
+      "label_idle": "拖拽文件到此或是选择文件上传"
+    },
+    "status_bar": {
+      "selection": "selection",
+      "bytes": "bytes",
+      "words": "words",
+      "lines": "lines",
+      "characters": "characters",
+      "paragraphs": "paragraphs"
+    },
+    "navigation_bar": {
+      "synchronize_now": "Synchronize now",
+      "close_stack_edit": "Close StackEdit",
+      "open_stack_edit": "Open StackEdit",
+      "toggle_side_bar": "Toggle side bar",
+      "toggle_explorer": "Toggle explorer",
+      "synchronized_location": "Synchronized location",
+      "publish_location": "Publish location",
+      "publish_now": "Publish now",
+      "restore": "Restore",
+      "close_revision": "Close revision",
+      "undo": "Undo",
+      "redo": "Redo"
+    },
+    "explorer_node": {
+      "new_file": "New file",
+      "new_folder": "New folder",
+      "rename": "Rename",
+      "delete": "Delete",
+      "close": "Close explorer"
+    }
+  }
+}

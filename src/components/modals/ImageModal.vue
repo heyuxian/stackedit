@@ -4,14 +4,14 @@
       <file-pond
           name="file"
           ref="pond"
-          label-idle="选择文件或拖拽文件到此处上传..."
+          :label-idle="$t('message.image_modal.label_idle')"
           allow-multiple="false"
           accepted-file-types="image/jpeg, image/png"
-          v-bind:files="myFiles"/>
+          v-bind:files="myFiles"></file-pond>
     </div>
     <div class="modal__button-bar">
-      <button class="button" @click="reject()">取消</button>
-      <button class="button button--resolve" @click="resolve()">确定</button>
+      <button class="button" @click="reject()">{{$t('message.common.cancel')}}</button>
+      <button class="button button--resolve" @click="resolve()">{{$t('message.common.ok')}}</button>
     </div>
   </modal-inner>
 </template>

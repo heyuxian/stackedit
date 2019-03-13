@@ -1,0 +1,45 @@
+{
+  "message": {
+    "common": {
+      "ok": "确定",
+      "cancel": "取消",
+      "trash": "回收站",
+      "temp": "Temp"
+    },
+    "link_modal": {
+      "label": "请输入链接地址"
+    },
+    "image_modal": {
+      "label_idle": "拖拽文件到此或是选择文件上传"
+    },
+    "status_bar": {
+      "selection": "选择",
+      "bytes": "字节",
+      "words": "字",
+      "lines": "行",
+      "characters": "字符",
+      "paragraphs": "段落"
+    },
+    "navigation_bar": {
+      "synchronize_now": "立刻同步",
+      "close_stack_edit": "关闭 StackEdit",
+      "open_stack_edit": "打开 StackEdit",
+      "toggle_side_bar": "切换侧边栏",
+      "toggle_explorer": "切换 explorer",
+      "synchronized_location": "同步位置",
+      "publish_location": "发布位置",
+      "publish_now": "立刻发布",
+      "restore": "重置",
+      "close_revision": "关闭修订",
+      "undo": "回退",
+      "redo": "重做"
+    },
+    "explorer_node": {
+      "new_file": "新建文件",
+      "new_folder": "新建文件夹",
+      "rename": "重命名",
+      "delete": "删除",
+      "close": "关闭 explorer"
+    }
+  }
+}

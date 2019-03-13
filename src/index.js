@@ -7,6 +7,7 @@ import './services/optional';
 import './icons';
 import App from './components/App';
 import store from './store';
+import i18n from './i18n';
 import localDbSvc from './services/localDbSvc';
 
 if (!indexedDB) {
@@ -55,5 +56,6 @@ Vue.config.productionTip = false;
 new Vue({
   el: '#app',
   store,
+  i18n,
   render: h => h(App),
 });

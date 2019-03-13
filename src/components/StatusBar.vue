@@ -3,7 +3,7 @@
     <div class="stat-panel__block stat-panel__block--left" v-if="styles.showEditor">
       <span class="stat-panel__block-name">
         Markdown
-        <span v-if="textSelection">selection</span>
+        <span v-if="textSelection">{{$t('message.status_bar.selection')}}</span>
       </span>
       <span v-for="stat in textStats" :key="stat.id">
         <span class="stat-panel__value">{{stat.value}}</span> {{stat.name}}
@@ -13,7 +13,7 @@
     <div class="stat-panel__block stat-panel__block--right">
       <span class="stat-panel__block-name">
         HTML
-        <span v-if="htmlSelection">selection</span>
+        <span v-if="htmlSelection">{{$t('message.status_bar.selection')}}</span>
       </span>
       <span v-for="stat in htmlStats" :key="stat.id">
         <span class="stat-panel__value">{{stat.value}}</span> {{stat.name}}
@@ -26,6 +26,7 @@
 import { mapGetters } from 'vuex';
 import editorSvc from '../services/editorSvc';
 import utils from '../services/utils';
+import i18n from '../i18n';
 
 class Stat {
   constructor(name, regex) {
@@ -43,14 +44,14 @@ export default {
     line: 0,
     column: 0,
     textStats: [
-      new Stat('bytes', '[\\s\\S]'),
-      new Stat('words', '\\S+'),
-      new Stat('lines', '\n'),
+      new Stat(i18n.t('message.status_bar.bytes'), '[\\s\\S]'),
+      new Stat(i18n.t('message.status_bar.words'), '\\S+'),
+      new Stat(i18n.t('message.status_bar.lines'), '\n'),
     ],
     htmlStats: [
-      new Stat('characters', '\\S'),
-      new Stat('words', '\\S+'),
-      new Stat('paragraphs', '\\S.*'),
+      new Stat(i18n.t('message.status_bar.characters'), '\\S'),
+      new Stat(i18n.t('message.status_bar.words'), '\\S+'),
+      new Stat(i18n.t('message.status_bar.paragraphs'), '\\S.*'),
     ],
   }),
   computed: mapGetters('layout', [
