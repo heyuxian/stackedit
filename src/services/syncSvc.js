@@ -1,4 +1,5 @@
 import localDbSvc from './localDbSvc';
+import docs4devSvc from './docs4devSvc';
 import store from '../store';
 import utils from './utils';
 import diffUtils from './diffUtils';
@@ -17,7 +18,6 @@ const minAutoSyncEvery = 60 * 1000; // 60 sec
 const inactivityThreshold = 3 * 1000; // 3 sec
 const restartSyncAfter = 30 * 1000; // 30 sec
 const restartContentSyncAfter = 1000; // Enough to detect an authorize pop up
-const checkSponsorshipAfter = (5 * 60 * 1000) + (30 * 1000); // tokenExpirationMargin + 30 sec
 const maxContentHistory = 20;
 
 const LAST_SEEN = 0;
@@ -862,6 +862,12 @@ const requestSync = () => {
   });
 };
 
+function getParameter(name) {
+  const regex = new RegExp(`[?&]${name}=([^&#]*)`);
+  const results = regex.exec(window.location.search);
+  return results == null ? '' : decodeURIComponent(results[1]);
+}
+
 export default {
   async init() {
     // Load workspaces and tokens from localStorage
@@ -880,25 +886,19 @@ export default {
     }
     const workspace = await workspaceProvider.initWorkspace();
     // Fix the URL hash
-    const { paymentSuccess } = utils.queryParams;
     utils.setQueryParams(workspaceProvider.getWorkspaceParams(workspace));
 
     store.dispatch('workspace/setCurrentWorkspaceId', workspace.id);
+
+    // localDbSvc 会 监听 store 的变化并同步到本地数据库，==> store.watch
     await localDbSvc.init();
 
-    // Enable sponsorship
-    if (paymentSuccess) {
-      store.dispatch('modal/open', 'paymentSuccess')
-        .catch(() => { /* Cancel */ });
-      const sponsorToken = store.getters['workspace/sponsorToken'];
-      // Force check sponsorship after a few seconds
-      const currentDate = Date.now();
-      if (sponsorToken && sponsorToken.expiresOn > currentDate - checkSponsorshipAfter) {
-        store.dispatch('data/addGoogleToken', {
-          ...sponsorToken,
-          expiresOn: currentDate - checkSponsorshipAfter,
-        });
-      }
+    // 需要在 localDbSvc 后面调用
+    const chapterId = parseInt(getParameter('chapterId'), 0);
+    const lang = getParameter('lang');
+    // 不能从 URL 取参数，否则在切换导航时无法更新 URL 参数
+    if (chapterId && lang) {
+      await docs4devSvc.queryChapter({ chapterId, lang });
     }
 
     // Try to find a suitable action provider

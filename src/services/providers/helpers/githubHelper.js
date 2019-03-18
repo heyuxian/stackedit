@@ -3,7 +3,7 @@ import networkSvc from '../../networkSvc';
 import store from '../../../store';
 import userSvc from '../../userSvc';
 
-const clientId = GITHUB_CLIENT_ID;
+const clientId = '555244e80d9beb4dc52e';
 const getScopes = token => [token.repoFullAccess ? 'repo' : 'public_repo', 'gist'];
 
 const request = (token, options) => networkSvc.request({

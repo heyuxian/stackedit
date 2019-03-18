@@ -17,17 +17,6 @@
         <icon-folder></icon-folder>
       </button>
     </div>
-    <!-- Side bar -->
-    <div class="navigation-bar__inner navigation-bar__inner--right navigation-bar__inner--button">
-      <a class="navigation-bar__button navigation-bar__button--stackedit button" v-if="light" href="app" target="_blank"
-         v-title="$t('message.navigation_bar.open_stack_edit')">
-        <icon-provider provider-id="stackedit"></icon-provider>
-      </a>
-      <button class="navigation-bar__button navigation-bar__button--stackedit button" v-else tour-step-anchor="menu"
-              @click="toggleSideBar()" v-title="$t('message.navigation_bar.toggle_side_bar')">
-        <icon-provider provider-id="stackedit"></icon-provider>
-      </button>
-    </div>
     <div class="navigation-bar__inner navigation-bar__inner--right navigation-bar__inner--title flex flex--row">
       <!-- Spinner -->
       <div class="navigation-bar__spinner">
@@ -46,37 +35,15 @@
              @mouseleave="titleHover = false" v-model="title">
       <!-- Sync/Publish -->
       <div class="flex flex--row" :class="{'navigation-bar__hidden': styles.hideLocations}">
-        <a class="navigation-bar__button navigation-bar__button--location button"
-           :class="{'navigation-bar__button--blink': location.id === currentLocation.id}"
-           v-for="location in syncLocations" :key="location.id" :href="location.url" target="_blank"
-           v-title="$t('message.navigation_bar.synchronized_location')">
-          <icon-provider :provider-id="location.providerId"></icon-provider>
-        </a>
-        <button class="navigation-bar__button navigation-bar__button--sync button"
-                :disabled="!isSyncPossible || isSyncRequested || offline" @click="requestSync"
-                v-title="$t('message.navigation_bar.synchronize_now')">
-          <icon-sync></icon-sync>
-        </button>
-        <a class="navigation-bar__button navigation-bar__button--location button"
-           :class="{'navigation-bar__button--blink': location.id === currentLocation.id}"
-           v-for="location in publishLocations" :key="location.id" :href="location.url" target="_blank"
-           v-title="$t('message.navigation_bar.publish_location')">
-          <icon-provider :provider-id="location.providerId"></icon-provider>
-        </a>
         <button class="navigation-bar__button navigation-bar__button--publish button"
-                :disabled="!publishLocations.length || isPublishRequested || offline" @click="requestPublish"
+                @click="requestPublish"
                 v-title="$t('message.navigation_bar.publish_now')">
-          <icon-upload></icon-upload>
+          <icon-content-save></icon-content-save>
         </button>
-      </div>
-      <!-- Revision -->
-      <div class="flex flex--row" v-if="revisionContent">
-        <button class="navigation-bar__button navigation-bar__button--revision navigation-bar__button--restore button"
-                @click="restoreRevision">{{$t('message.navigation_bar.restore')}}
-        </button>
-        <button class="navigation-bar__button navigation-bar__button--revision button" @click="setRevisionContent()"
-                v-title="$t('message.navigation_bar.close_revision')">
-          <icon-close></icon-close>
+        <button class="navigation-bar__button button"
+                @click="openNew"
+                v-title="'新窗口打开'">
+          <icon-open-in-new></icon-open-in-new>
         </button>
       </div>
     </div>
@@ -102,7 +69,7 @@
   import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
   import editorSvc from '../services/editorSvc';
   import syncSvc from '../services/syncSvc';
-  import publishSvc from '../services/publishSvc';
+  import docs4devSvc from '../services/docs4devSvc';
   import animationSvc from '../services/animationSvc';
   import tempFileSvc from '../services/tempFileSvc';
   import utils from '../services/utils';
@@ -234,9 +201,11 @@
         }
       },
       requestPublish() {
-        if (this.publishLocations.length && !this.isPublishRequested) {
-          publishSvc.requestPublish();
-        }
+        docs4devSvc.requestSave();
+      },
+      openNew() {
+        const current = store.getters['file/current'];
+        window.location.href = `/docs/${current.lang}/${current.code}/${current.version}/${current.chatType}/${current.uri}`;
       },
       pagedownClick(name) {
         if (store.getters['content/isCurrentEditable']) {

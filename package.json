@@ -40,6 +40,7 @@
     "google-id-token-verifier": "^0.2.3",
     "handlebars": "^4.0.10",
     "indexeddbshim": "^3.6.2",
+    "isomorphic-unfetch": "^3.0.0",
     "js-yaml": "^3.11.0",
     "katex": "^v0.10.0-rc.1",
     "markdown-it": "^8.4.1",
