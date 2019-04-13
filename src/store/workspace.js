@@ -123,10 +123,8 @@ export default {
         { root: true },
       );
     },
-    setCurrentWorkspaceId: ({ commit, getters }, value) => {
+    setCurrentWorkspaceId: ({ commit }, value) => {
       commit('setCurrentWorkspaceId', value);
-      const lastFocus = parseInt(localStorage.getItem(getters.lastFocusKey), 10) || 0;
-      commit('setLastFocus', lastFocus);
     },
   },
 };

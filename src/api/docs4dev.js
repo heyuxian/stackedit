@@ -1,8 +1,7 @@
 import 'isomorphic-unfetch';
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = NODE_ENV !== 'production';
 const endpoint = dev ? 'http://dev.docs4dev.com' : 'https://www.docs4dev.com';
-
 export async function queryChapter({ chapterId, lang = 'en' }) {
   const res = await fetch(`${endpoint}/admin/chapters/${chapterId}?lang=${lang}`);
   if (res.status >= 200 && res.status < 300) {

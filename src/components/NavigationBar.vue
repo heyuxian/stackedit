@@ -1,22 +1,6 @@
 <template>
   <nav class="navigation-bar"
        :class="{'navigation-bar--editor': styles.showEditor && !revisionContent, 'navigation-bar--light': light}">
-    <!-- Explorer -->
-    <div class="navigation-bar__inner navigation-bar__inner--left navigation-bar__inner--button">
-      <button class="navigation-bar__button navigation-bar__button--close button"
-              v-if="light"
-              @click="close()"
-              v-title="$t('message.navigation_bar.close_stack_edit')">
-        <icon-check-circle></icon-check-circle>
-      </button>
-      <button class="navigation-bar__button navigation-bar__button--explorer-toggler button"
-              v-else
-              tour-step-anchor="explorer"
-              @click="toggleExplorer()"
-              v-title="$t('message.navigation_bar.toggle_explorer')">
-        <icon-folder></icon-folder>
-      </button>
-    </div>
     <div class="navigation-bar__inner navigation-bar__inner--right navigation-bar__inner--title flex flex--row">
       <!-- Spinner -->
       <div class="navigation-bar__spinner">
@@ -75,7 +59,6 @@
   import utils from '../services/utils';
   import pagedownButtons from '../data/pagedownButtons';
   import store from '../store';
-  import workspaceSvc from '../services/workspaceSvc';
 
   // According to mousetrap
   const mod = /Mac|iPod|iPhone|iPad/.test(navigator.platform) ? 'Meta' : 'Ctrl';
@@ -205,7 +188,7 @@
       },
       openNew() {
         const current = store.getters['file/current'];
-        window.location.href = `/docs/${current.lang}/${current.code}/${current.version}/${current.chatType}/${current.uri}`;
+        window.open(`/docs/${current.lang}/${current.code}/${current.version}/${current.chatType}/${current.uri}`);
       },
       pagedownClick(name) {
         if (store.getters['content/isCurrentEditable']) {
@@ -220,14 +203,10 @@
           const title = this.title.trim();
           this.title = store.getters['file/current'].name;
           if (title) {
-            try {
-              await workspaceSvc.storeItem({
-                ...store.getters['file/current'],
-                name: title,
-              });
-            } catch (e) {
-              // Cancel
-            }
+            store.commit('file/setItem', {
+              ...store.getters['file/current'],
+              name: title,
+            });
           }
         }
       },

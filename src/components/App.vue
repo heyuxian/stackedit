@@ -18,7 +18,6 @@ import Notification from './Notification';
 import ContextMenu from './ContextMenu';
 import SplashScreen from './SplashScreen';
 import syncSvc from '../services/syncSvc';
-import tempFileSvc from '../services/tempFileSvc';
 import store from '../store';
 import './common/vueGlobals';
 
@@ -44,16 +43,10 @@ export default {
       return Array.isArray(result) ? result : themeClasses.light;
     },
   },
-  methods: {
-    close() {
-      tempFileSvc.close();
-    },
-  },
   async created() {
     try {
       await syncSvc.init();
       this.ready = true;
-      tempFileSvc.setReady();
     } catch (err) {
       if (err && err.message === 'RELOAD') {
         window.location.reload();

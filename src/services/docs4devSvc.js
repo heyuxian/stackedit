@@ -8,7 +8,6 @@ export default {
       chapterId,
       lang,
     });
-    // TODO id undefiende
     const item = {
       id: chapter.chapterId.toString(),
       name: utils.sanitizeFilename(chapter.title),
@@ -46,8 +45,7 @@ export default {
       } else {
         store.dispatch('notification/error', '修改失败！');
       }
-    }).catch((e) => {
-      console.log(e);
+    }).catch(() => {
       store.dispatch('notification/error', '修改失败!');
     });
   },

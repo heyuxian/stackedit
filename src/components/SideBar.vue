@@ -12,8 +12,7 @@
       </button>
     </div>
     <div class="side-bar__inner">
-      <main-menu v-if="panel === 'menu'"></main-menu>
-      <workspaces-menu v-else-if="panel === 'workspaces'"></workspaces-menu>
+      <workspaces-menu v-if="panel === 'workspaces'"></workspaces-menu>
       <sync-menu v-else-if="panel === 'sync'"></sync-menu>
       <publish-menu v-else-if="panel === 'publish'"></publish-menu>
       <history-menu v-else-if="panel === 'history'"></history-menu>
@@ -34,7 +33,6 @@
 <script>
 import { mapActions } from 'vuex';
 import Toc from './Toc';
-import MainMenu from './menus/MainMenu';
 import WorkspacesMenu from './menus/WorkspacesMenu';
 import SyncMenu from './menus/SyncMenu';
 import PublishMenu from './menus/PublishMenu';
@@ -62,7 +60,6 @@ const panelNames = {
 export default {
   components: {
     Toc,
-    MainMenu,
     WorkspacesMenu,
     SyncMenu,
     PublishMenu,

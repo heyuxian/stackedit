@@ -5,16 +5,13 @@ import utils from './utils';
 import diffUtils from './diffUtils';
 import networkSvc from './networkSvc';
 import providerRegistry from './providers/common/providerRegistry';
-import googleDriveAppDataProvider from './providers/googleDriveAppDataProvider';
 import './providers/couchdbWorkspaceProvider';
 import './providers/githubWorkspaceProvider';
 import './providers/gitlabWorkspaceProvider';
 import './providers/googleDriveWorkspaceProvider';
-import tempFileSvc from './tempFileSvc';
 import workspaceSvc from './workspaceSvc';
 import constants from '../data/constants';
 
-const minAutoSyncEvery = 60 * 1000; // 60 sec
 const inactivityThreshold = 3 * 1000; // 3 sec
 const restartSyncAfter = 30 * 1000; // 30 sec
 const restartContentSyncAfter = 1000; // Enough to detect an authorize pop up
@@ -24,7 +21,6 @@ const LAST_SEEN = 0;
 const LAST_MERGED = 1;
 const LAST_SENT = 2;
 
-let actionProvider;
 let workspaceProvider;
 
 /**
@@ -57,17 +53,6 @@ const isSyncWindow = () => {
   const storedLastSyncActivity = getLastStoredSyncActivity();
   return lastSyncActivity === storedLastSyncActivity ||
     Date.now() > inactivityThreshold + storedLastSyncActivity;
-};
-
-/**
- * Return true if auto sync can start, ie if lastSyncActivity is old enough.
- */
-const isAutoSyncReady = () => {
-  let { autoSyncEvery } = store.getters['data/computedSettings'];
-  if (autoSyncEvery < minAutoSyncEvery) {
-    autoSyncEvery = minAutoSyncEvery;
-  }
-  return Date.now() > autoSyncEvery + getLastStoredSyncActivity();
 };
 
 /**
@@ -870,28 +855,7 @@ function getParameter(name) {
 
 export default {
   async init() {
-    // Load workspaces and tokens from localStorage
-    localDbSvc.syncLocalStorage();
-
-    // Try to find a suitable action provider
-    actionProvider = providerRegistry.providersById[utils.queryParams.providerId];
-    if (actionProvider && actionProvider.initAction) {
-      await actionProvider.initAction();
-    }
-
-    // Try to find a suitable workspace sync provider
-    workspaceProvider = providerRegistry.providersById[utils.queryParams.providerId];
-    if (!workspaceProvider || !workspaceProvider.initWorkspace) {
-      workspaceProvider = googleDriveAppDataProvider;
-    }
-    const workspace = await workspaceProvider.initWorkspace();
-    // Fix the URL hash
-    utils.setQueryParams(workspaceProvider.getWorkspaceParams(workspace));
-
-    store.dispatch('workspace/setCurrentWorkspaceId', workspace.id);
-
-    // localDbSvc 会 监听 store 的变化并同步到本地数据库，==> store.watch
-    await localDbSvc.init();
+    store.dispatch('workspace/setCurrentWorkspaceId', 'main');
 
     // 需要在 localDbSvc 后面调用
     const chapterId = parseInt(getParameter('chapterId'), 0);
@@ -899,38 +863,6 @@ export default {
     // 不能从 URL 取参数，否则在切换导航时无法更新 URL 参数
     if (chapterId && lang) {
       await docs4devSvc.queryChapter({ chapterId, lang });
-    }
-
-    // Try to find a suitable action provider
-    actionProvider = providerRegistry.providersById[utils.queryParams.providerId] || actionProvider;
-    if (actionProvider && actionProvider.performAction) {
-      const newSyncLocation = await actionProvider.performAction();
-      if (newSyncLocation) {
-        this.createSyncLocation(newSyncLocation);
-      }
-    }
-
-    await tempFileSvc.init();
-
-    if (!store.state.light) {
-      // Sync periodically
-      utils.setInterval(() => {
-        if (isSyncPossible()
-          && networkSvc.isUserActive()
-          && isSyncWindow()
-          && isAutoSyncReady()
-        ) {
-          requestSync();
-        }
-      }, 1000);
-
-      // Unload contents from memory periodically
-      utils.setInterval(() => {
-        // Wait for sync and publish to finish
-        if (store.state.queue.isEmpty) {
-          localDbSvc.unloadContents();
-        }
-      }, 5000);
     }
   },
   isSyncPossible,
