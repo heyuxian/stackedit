@@ -20,6 +20,6 @@ export default {
     'layoutSettings',
     'tokens',
   ],
-  textMaxLength: 250000,
+  textMaxLength: 2500000,
   defaultName: 'Untitled',
 };
